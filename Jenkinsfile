@@ -1,4 +1,3 @@
-def VAULT_ADDR = "http://vault-hbm-benchmark.ocp311-apps.ocp.mc1985.net"
 
 pipeline {
 	agent any
@@ -13,6 +12,22 @@ pipeline {
 	}
 
 	stages {
+		
+		stage("props file"){
+        steps{
+            script {
+
+                def props = """Url=https://#########/login.jsp
+Username=########
+Password=########"""
+            
+                def str =  readFile file: "bootstrap.properties"
+                echo str
+
+            }
+         }
+      }
+		
 		stage("test: baseline (jdk8)") {
 			agent {
 				any {
