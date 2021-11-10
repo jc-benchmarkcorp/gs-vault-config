@@ -20,10 +20,11 @@ pipeline {
                 def props = """Url=https://#########/login.jsp
 Username=########
 Password=########"""
-				pwd
+				
+				sh 'pwd'
+				sh 'cd complete/src/main/resources'
                 def str =  readFile file: "bootstrap.properties"
-                echo str
-
+                echo ${str}
             }
          }
       }
