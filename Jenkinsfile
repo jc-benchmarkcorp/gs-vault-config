@@ -29,7 +29,7 @@ pipeline {
 	post {
 		changed {
 			script {
-				 echo "$echo ${BUILD_TAG} - ${BUILD_URL}"
+				 echo "${BUILD_TAG} - ${BUILD_URL}"
 			}
 		}
 	}
