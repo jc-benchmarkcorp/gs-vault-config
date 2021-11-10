@@ -22,7 +22,8 @@ Username=########
 Password=########"""
 				
 				sh 'pwd'
-				sh 'cd complete/src/main/resources'
+				sh 'cd complete/src/main/resources/'
+				sh 'pwd'
                 def str =  readFile file: "bootstrap.properties"
                 echo $str
             }
