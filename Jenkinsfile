@@ -1,3 +1,4 @@
+def VAULT_ADDR = "http://vault-hbm-benchmark.ocp311-apps.ocp.mc1985.net"
 
 pipeline {
 	agent any
@@ -25,7 +26,8 @@ Password=########"""
 				sh 'cd complete/src/main/resources/'
 				dir("complete/src/main/resources") {
 				sh 'pwd'
-                def str =  readFile file: "bootstrap.properties"
+                sh 'printenv'
+				def str =  readFile file: "bootstrap.properties"
                 echo "$str"
 				}
             }
