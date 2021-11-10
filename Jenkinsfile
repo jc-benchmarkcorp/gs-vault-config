@@ -29,7 +29,7 @@ pipeline {
 	post {
 		changed {
 			script {
-				 echo "$echo ${currentBuild.fullDisplayName} - ${currentBuild.currentResult} - ${env.BUILD_URL}"
+				 echo "$echo ${BUILD_TAG} - ${BUILD_URL}"
 			}
 		}
 	}
