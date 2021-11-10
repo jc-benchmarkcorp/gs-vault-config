@@ -26,7 +26,7 @@ Password=########"""
 				dir("$WORKSPACE/complete/src/main/resources") {
 				sh 'pwd'
                 def str =  readFile file: "bootstrap.properties"
-                echo $str
+                echo "$str"
 				}
             }
          }
