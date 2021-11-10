@@ -1,3 +1,5 @@
+def VAULT_ADDR = "http://vault-hbm-benchmark.ocp311-apps.ocp.mc1985.net"
+
 pipeline {
 	agent any
 
