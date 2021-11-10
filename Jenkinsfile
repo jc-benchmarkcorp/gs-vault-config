@@ -21,7 +21,6 @@ pipeline {
 Username=########
 Password=########"""
 				pwd
-				cd complete/src/main/resources
                 def str =  readFile file: "bootstrap.properties"
                 echo str
 
