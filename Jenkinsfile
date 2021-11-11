@@ -12,27 +12,6 @@ pipeline {
 		buildDiscarder(logRotator(numToKeepStr: '14'))
 	}
 
-	stages {
-		
-		stage("props file"){
-        steps{
-            script {
-
-                def props = """Url=https://#########/login.jsp
-Username=########
-Password=########"""
-				
-				sh 'pwd'
-				sh 'cd complete/src/main/resources/'
-				dir("complete/src/main/resources") {
-				sh 'pwd'
-                sh 'printenv'
-				def str =  readFile file: "bootstrap.properties"
-                echo "$str"
-				}
-            }
-         }
-      }
 		
 		stage("test: baseline (jdk8)") {
 			agent {
