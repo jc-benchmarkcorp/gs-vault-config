@@ -28,12 +28,4 @@ pipeline {
 		}
 
 	}
-
-	post {
-		changed {
-			script {
-				 echo "${BUILD_TAG} - ${BUILD_URL}"
-			}
-		}
-	}
 }
