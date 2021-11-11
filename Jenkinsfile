@@ -12,6 +12,7 @@ pipeline {
 		buildDiscarder(logRotator(numToKeepStr: '14'))
 	}
 
+	
 		
 		stage("test: baseline (jdk8)") {
 			agent {
@@ -26,7 +27,7 @@ pipeline {
 			}
 		}
 
-
+	}
 
 	post {
 		changed {
