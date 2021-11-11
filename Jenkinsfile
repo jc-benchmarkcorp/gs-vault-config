@@ -12,6 +12,8 @@ pipeline {
 		buildDiscarder(logRotator(numToKeepStr: '14'))
 	}
 
+	stages {
+		
 	
 		
 		stage("test: baseline (jdk8)") {
@@ -27,5 +29,13 @@ pipeline {
 			}
 		}
 
+	}
+
+	post {
+		always {
+			script {
+				 echo "${BUILD_TAG} - ${BUILD_URL}"
+			}
+		}
 	}
 }
