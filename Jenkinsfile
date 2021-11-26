@@ -120,7 +120,9 @@ stage("test: baseline (jdk8)") {
 
 mkdir -p target
 cd target
+pwd
 cd ..
+pwd
 cd ..
 pwd
 cd ../complete
