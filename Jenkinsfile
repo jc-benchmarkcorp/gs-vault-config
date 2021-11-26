@@ -117,7 +117,7 @@ stage("test: baseline (jdk8)") {
 			steps {
 				script {
 				pwd
-				sh (script: """mkdir -p target""")
+				sh 'mkdir -p target'
 				cd target
 				pwd
 				cd ../complete
