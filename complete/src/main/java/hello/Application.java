@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 @SpringBootApplication
 @EnableConfigurationProperties(MyConfiguration.class)
-class AppConfig extends AbstractVaultConfiguration {
+public class Application implements CommandLineRunner {
 
 	private final MyConfiguration configuration;
 
@@ -24,13 +24,6 @@ class AppConfig extends AbstractVaultConfiguration {
 	@Override
 	public void run(String... args) {
 
-		AppRoleAuthenticationOptions options = AppRoleAuthenticationOptions.builder()
-                .roleId(RoleId.provided("…"))
-                .secretId(SecretId.wrapped(VaultToken.of("…")))
-                .build();
-
-        return new AppRoleAuthentication(options, restOperations());
-		
 		Logger logger = LoggerFactory.getLogger(Application.class);
 
 		logger.info("----------------------------------------");
