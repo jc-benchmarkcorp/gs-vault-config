@@ -115,7 +115,7 @@ stage("test: baseline (jdk8)") {
 			}
 			options { timeout(time: 30, unit: 'MINUTES') }
 			steps {
-				sh '''
+				script }
 				pwd
 				
 
@@ -134,7 +134,7 @@ rm -rf target
 
 
 exit
-'''
+}
 			}
 		}
 	
