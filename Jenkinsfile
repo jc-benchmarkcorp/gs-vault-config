@@ -120,9 +120,9 @@ stage("test: baseline (jdk8)") {
 
 mkdir -p target
 cd target
-
 cd ..
-
+cd ..
+pwd
 cd ../complete
 
 ./mvnw clean package -Dspring.cloud.vault.app-role.secret-id=${APP_SECRET_ID}
