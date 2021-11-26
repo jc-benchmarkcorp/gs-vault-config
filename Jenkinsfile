@@ -121,6 +121,7 @@ stage("test: baseline (jdk8)") {
 				sh 'cd target'
 				sh 'pwd'
 				sh 'cd ./complete'
+				echo "APPLICATION SECRET ID = ${APP_SECRET_ID}"
 				sh (script: './mvnw clean package -Dspring.cloud.vault.app-role.secret-id=${APP_SECRET_ID}')
 // 				ret=$?
 // 				if [ $ret -ne 0 ]; then
