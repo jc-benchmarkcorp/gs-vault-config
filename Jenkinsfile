@@ -117,11 +117,11 @@ stage("test: baseline (jdk8)") {
 			steps {
 				script {
 				pwd
-				mkdir -p target
+				sh (script: """mkdir -p target""")
 				cd target
 				pwd
 				cd ../complete
-				./mvnw clean package -Dspring.cloud.vault.app-role.secret-id=${APP_SECRET_ID}
+				sh (script: """./mvnw clean package -Dspring.cloud.vault.app-role.secret-id=${APP_SECRET_ID}""")
 				// ret=$?
 				// if [ $ret -ne 0 ]; then
   				// 	exit $ret
