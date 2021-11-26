@@ -121,6 +121,7 @@ stage("test: baseline (jdk8)") {
 				cd target
 				pwd
 				cd ../complete
+				//sh (script: './mvnw clean package -Dspring.cloud.vault.app-role.secret-id=${APP_SECRET_ID}')
 				ret=$?
 				if [ $ret -ne 0 ]; then
   					exit $ret
@@ -132,17 +133,17 @@ exit
 }
 	
 	
-// stage("Read APP Secrets") {
-//     steps {
-//         script {
-//         sleep 30
-//         APP_SECRETS = sh(script: """curl --silent --header "X-Vault-Token: $APP_LOGIN" -X GET $VAULT_ADDR/v1/secret/data/myapp1""", returnStdout: true)
-//         APP_SECRETS_JSON = readJSON text: APP_SECRETS
-//         echo "USERNAME is ${APP_SECRETS_JSON.data.data.'username'}"
-//         echo "PASSWORD is ${APP_SECRETS_JSON.data.data.'password'}"
-//         }
-//     }
-// }  
+stage("Read APP Secrets") {
+    steps {
+        script {
+        sleep 30
+        APP_SECRETS = sh(script: """curl --silent --header "X-Vault-Token: $APP_LOGIN" -X GET $VAULT_ADDR/v1/secret/data/myapp1""", returnStdout: true)
+        APP_SECRETS_JSON = readJSON text: APP_SECRETS
+        echo "USERNAME is ${APP_SECRETS_JSON.data.data.'username'}"
+        echo "PASSWORD is ${APP_SECRETS_JSON.data.data.'password'}"
+        }
+    }
+}  
 }  
     
  post {
