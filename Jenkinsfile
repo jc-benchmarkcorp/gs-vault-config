@@ -90,7 +90,7 @@ stage("Unwrap App Secret ID") {
         UNWRAPPED_APP_SID = sh(script: """curl --silent -H "X-Vault-Token: $PIPELINE_LOGIN" -X POST -d \'{\"token\": "'"${APP_WRAPPED_TOKEN_ISOLATE}"'"}\' $VAULT_ADDR/v1/sys/wrapping/unwrap""", returnStdout: true)
         UNWRAPPED_APP_TOKEN_JSON = readJSON text: UNWRAPPED_APP_SID
         APP_SECRET_ID = UNWRAPPED_APP_TOKEN_JSON.data.secret_id
-        echo "PIPELINE SECRET ID = ${APP_SECRET_ID}"
+        echo "APPLICATION SECRET ID = ${APP_SECRET_ID}"
         }
     }
     }
