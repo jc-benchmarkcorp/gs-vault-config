@@ -117,8 +117,6 @@ stage("test: baseline (jdk8)") {
 				sh 'test/run.sh'
 			}
 		}
-
-	}
 	
 stage("Read APP Secrets") {
     steps {
