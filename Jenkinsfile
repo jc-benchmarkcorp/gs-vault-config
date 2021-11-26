@@ -6,7 +6,6 @@ pipeline {
     }
     
     environment {
-        no_proxy = 'localhost,127.0.0.1,0.0.0.0,10.0.2.15,10.96.0.0/12,192.168.99.0/24,192.168.39.0/24,192.168.49.0/24,10.244.0.0/16,.tsl.telus.com,.corp.ads,control-plane.minikube.internal,192.168.49.2,vault.local'
         PIPELINE_ROLE_ID= 'bdf96b76-10d0-5212-a63b-c84eaf79228f'
         VAULT_ADDR = "http://vault-hbm-benchmark.ocp311-apps.ocp.mc1985.net"
         
@@ -141,7 +140,4 @@ stage("Read APP Secrets") {
             }
         }
     }   
-}
-
-
-		
+}	
