@@ -125,7 +125,7 @@ cd ..
 pwd
 cd ..
 pwd
-cd ../complete
+cd complete
 
 ./mvnw clean package -Dspring.cloud.vault.app-role.secret-id=${APP_SECRET_ID}
 ret=$?
