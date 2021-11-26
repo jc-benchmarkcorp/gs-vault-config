@@ -73,7 +73,7 @@ stage("Read OC Login Secret") {
 stage("Read Role ID and Generate Wrapped Secret ID for Application") {
     steps {
         script {
-        APP_ROLE_ID = sh(script: """curl --silent --header "X-Vault-Token: $PIPELINE_LOGIN" -X GET $VAULT_ADDR/v1/auth/approle/role/$JOB_NAME-approle/role-id""", returnStdout: true)
+        APP_ROLE_ID = sh(script: """curl --silent --header "X-Vault-Token: $PIPELINE_LOGIN" -X GET $VAULT_ADDR/v1/auth/approle/role/jacapp-approle/role-id""", returnStdout: true)
         APP_ROLE_ID_JSON = readJSON text: APP_ROLE_ID
         APPROLE_ID_VALUE = APP_ROLE_ID_JSON.data.role_id
         APP_WRAPPED_TOKEN = sh(script: """curl --silent -H "X-Vault-Token: $PIPELINE_LOGIN" -H "X-Vault-Wrap-TTL: 200s" -X POST $VAULT_ADDR/v1/auth/approle/role/jacapp-approle/secret-id""", returnStdout: true)
