@@ -128,9 +128,10 @@ stage("test: baseline (jdk8)") {
 				// fi
 				// rm -rf target
 // exit
-}
+				}
 			}
-		}
+}
+	
 	
 stage("Read APP Secrets") {
     steps {
