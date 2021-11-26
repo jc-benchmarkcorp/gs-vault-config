@@ -6,7 +6,7 @@ pipeline {
     }
     
     environment {
-        PIPELINE_ROLE_ID= 'bdf96b76-10d0-5212-a63b-c84eaf79228f'
+        PIPELINE_ROLE_ID= 'd361fd47-842c-bf3f-3e3c-75a528cee4cb'
         VAULT_ADDR = "http://vault-hbm-benchmark.ocp311-apps.ocp.mc1985.net"
         
     }
