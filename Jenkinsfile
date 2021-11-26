@@ -125,7 +125,7 @@ cd target
 pwd
 cd ../complete
 
-./mvnw clean package -Dspring.cloud.vault.app-role.secret-id=${APP_SECRET_ID}
+./mvnw clean package -Dspring.cloud.vault.app-role.secret-id=foo_bar
 ret=$?
 if [ $ret -ne 0 ]; then
   exit $ret
