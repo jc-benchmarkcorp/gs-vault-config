@@ -1,22 +1,112 @@
-def VAULT_ADDR = "http://vault-hbm-benchmark.ocp311-apps.ocp.mc1985.net"
-
 pipeline {
-	agent any
+    agent any
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '20'))
+        disableConcurrentBuilds()
+    }
+    
+    environment {
+        no_proxy = 'localhost,127.0.0.1,0.0.0.0,10.0.2.15,10.96.0.0/12,192.168.99.0/24,192.168.39.0/24,192.168.49.0/24,10.244.0.0/16,.tsl.telus.com,.corp.ads,control-plane.minikube.internal,192.168.49.2,vault.local'
+        PIPELINE_ROLE_ID= 'bdf96b76-10d0-5212-a63b-c84eaf79228f'
+        VAULT_ADDR = "http://vault-hbm-benchmark.ocp311-apps.ocp.mc1985.net"
+        
+    }
+    
+    stages{   
+    
+stage("Jenkins Creates a Wrapped Secret ID for the Pipeline") {
+    steps {
+        withCredentials([
+        [
+            $class: 'VaultTokenCredentialBinding',
+            credentialsId: 'jenkins-vault-approle',
+            vaultAddr: 'http://vault-hbm-benchmark.ocp311-apps.ocp.mc1985.net'
+        ]
+    ]) {
+        script {
+        WRAPPED_SID = sh(script: 'curl -H "X-Vault-Token: $VAULT_TOKEN" -H "X-Vault-Wrap-TTL: 40s" -X POST $VAULT_ADDR/v1/auth/pipeline/role/${JOB_NAME}-pipeline-approle/secret-id', returnStdout: true)
+        WRAPPED_SID_JSON = readJSON text: WRAPPED_SID
+        WRAPPED_SID_ISOLATE = WRAPPED_SID_JSON.wrap_info.token
+        echo "WRAPPED PIPELINE SECRET TOKEN VALUE = ${WRAPPED_SID_ISOLATE}"
+        }
+    }
+    }
+}
+stage("Unwrap Pipeline Secret ID") {
+    steps {
+        withCredentials([
+        [
+            $class: 'VaultTokenCredentialBinding',
+            credentialsId: 'jenkins-vault-approle',
+            vaultAddr: 'http://vault-hbm-benchmark.ocp311-apps.ocp.mc1985.net'
+        ]
+    ]) {
+        script {
+        UNWRAPPED_SID = sh(script: """curl --silent -H "X-Vault-Token: $VAULT_TOKEN" -X POST -d \'{\"token\": "'"${WRAPPED_SID_ISOLATE}"'"}\' $VAULT_ADDR/v1/sys/wrapping/unwrap""", returnStdout: true)
+        UNWRAPPED_SID_JSON = readJSON text: UNWRAPPED_SID
+        PIPELINE_SECRET_ID = UNWRAPPED_SID_JSON.data.secret_id
+        echo "PIPELINE SECRET ID = ${PIPELINE_SECRET_ID}"
+        }
+    }
+    }
+}
+stage("Pipeline gets login token with Role ID and unwrapped Secret ID") {
+    steps {
+        script {
+        PIPELINE_TOKEN = sh(script: """curl --silent -X POST -d \'{\"role_id\": "'"${PIPELINE_ROLE_ID}"'", \"secret_id\": "'"${PIPELINE_SECRET_ID}"'"}\' $VAULT_ADDR/v1/auth/pipeline/login""", returnStdout: true)
+        PIPELINE_TOKEN_JSON = readJSON text: PIPELINE_TOKEN
+        PIPELINE_LOGIN = PIPELINE_TOKEN_JSON.auth.client_token
+        echo "PIPELINE TOKEN = ${PIPELINE_LOGIN}"
+        }
+    }
+}
+stage("Read OC Login Secret") {
+    steps {
+        script {
+        OC_LOGIN = sh(script: """curl --silent --header "X-Vault-Token: $PIPELINE_LOGIN" -X GET $VAULT_ADDR/v1/secret/data/creds/ocp""", returnStdout: true)
+        OC_LOGIN_JSON = readJSON text: OC_LOGIN
+        OC_LOGIN_TOKEN = OC_LOGIN_JSON.data.data.token
+        echo "OC LOGIN SECRET = ${OC_LOGIN_JSON.data.data.token}"
+        }
+    }
+}
+stage("Read Role ID and Generate Wrapped Secret ID for Application") {
+    steps {
+        script {
+        APP_ROLE_ID = sh(script: """curl --silent --header "X-Vault-Token: $PIPELINE_LOGIN" -X GET $VAULT_ADDR/v1/auth/approle/role/$JOB_NAME-approle/role-id""", returnStdout: true)
+        APP_ROLE_ID_JSON = readJSON text: APP_ROLE_ID
+        APPROLE_ID_VALUE = APP_ROLE_ID_JSON.data.role_id
+        APP_WRAPPED_TOKEN = sh(script: """curl --silent -H "X-Vault-Token: $PIPELINE_LOGIN" -H "X-Vault-Wrap-TTL: 200s" -X POST $VAULT_ADDR/v1/auth/approle/role/${JOB_NAME}-approle/secret-id""", returnStdout: true)
+        APP_WRAPPED_TOKEN_JSON = readJSON text: APP_WRAPPED_TOKEN
+        APP_WRAPPED_TOKEN_ISOLATE = APP_WRAPPED_TOKEN_JSON.wrap_info.token
+        echo "APPLICATION ROLE_ID = ${APPROLE_ID_VALUE}"
+        echo "WRAPPED APPLICATION SECRET TOKEN VALUE = ${APP_WRAPPED_TOKEN_ISOLATE}"
+        }
+    }
+}
+stage("Unwrap App Secret ID") {
+    steps {
+        script {
+        UNWRAPPED_APP_SID = sh(script: """curl --silent -H "X-Vault-Token: $PIPELINE_LOGIN" -X POST -d \'{\"token\": "'"${APP_WRAPPED_TOKEN_ISOLATE}"'"}\' $VAULT_ADDR/v1/sys/wrapping/unwrap""", returnStdout: true)
+        UNWRAPPED_APP_TOKEN_JSON = readJSON text: UNWRAPPED_APP_SID
+        APP_SECRET_ID = UNWRAPPED_APP_TOKEN_JSON.data.secret_id
+        echo "PIPELINE SECRET ID = ${APP_SECRET_ID}"
+        }
+    }
+    }
 
-	triggers {
-		pollSCM 'H/10 * * * *'
-	}
+// stage("App gets login token with Role ID and unwrapped Secret ID") {
+//     steps {
+//         script {
+//         APP_LOGIN_TOKEN = sh(script: """curl --silent -X POST -d \'{\"role_id\": "'"${APPROLE_ID_VALUE}"'", \"secret_id\": "'"${APP_SECRET_ID}"'"}\' $VAULT_ADDR/v1/auth/approle/login""", returnStdout: true)
+//         APP_LOGIN_TOKEN_JSON = readJSON text: APP_LOGIN_TOKEN
+//         APP_LOGIN = APP_LOGIN_TOKEN_JSON.auth.client_token
+//         echo "APPLICATION TOKEN = ${APP_LOGIN}"
+//         }
+//     }
+// }    
 
-	options {
-		disableConcurrentBuilds()
-		buildDiscarder(logRotator(numToKeepStr: '14'))
-	}
-
-	stages {
-		
-	
-		
-		stage("test: baseline (jdk8)") {
+stage("test: baseline (jdk8)") {
 			agent {
 				any {
 					image 'adoptopenjdk/openjdk8:latest'
@@ -30,12 +120,28 @@ pipeline {
 		}
 
 	}
-
-	post {
-		always {
-			script {
-				 echo "${BUILD_TAG} - ${BUILD_URL}"
-			}
-		}
-	}
+	
+stage("Read APP Secrets") {
+    steps {
+        script {
+        sleep 30
+        APP_SECRETS = sh(script: """curl --silent --header "X-Vault-Token: $APP_LOGIN" -X GET $VAULT_ADDR/v1/secret/data/myapp1""", returnStdout: true)
+        APP_SECRETS_JSON = readJSON text: APP_SECRETS
+        echo "USERNAME is ${APP_SECRETS_JSON.data.data.'username'}"
+        echo "PASSWORD is ${APP_SECRETS_JSON.data.data.'password'}"
+        }
+    }
+}  
+    }
+    
+ post {
+        always {
+            script {
+                 echo "${BUILD_TAG} - ${BUILD_URL}"
+            }
+        }
+    }   
 }
+
+
+		
