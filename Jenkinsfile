@@ -53,7 +53,8 @@ stage("Pipeline gets login token with Role ID and unwrapped Secret ID") {
     steps {
         script {
         PIPELINE_TOKEN = sh(script: """curl --silent -X POST -d \'{\"role_id\": "'"${PIPELINE_ROLE_ID}"'", \"secret_id\": "'"${PIPELINE_SECRET_ID}"'"}\' $VAULT_ADDR/v1/auth/pipeline/login""", returnStdout: true)
-        PIPELINE_TOKEN_JSON = readJSON text: PIPELINE_TOKEN
+        echo "PIPELINE TOKEN = ${PIPELINE_TOKEN}"
+		PIPELINE_TOKEN_JSON = readJSON text: PIPELINE_TOKEN
         PIPELINE_LOGIN = PIPELINE_TOKEN_JSON.auth.client_token
         echo "PIPELINE TOKEN = ${PIPELINE_LOGIN}"
         }
