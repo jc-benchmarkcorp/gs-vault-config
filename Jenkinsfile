@@ -132,17 +132,17 @@ exit
 }
 	
 	
-stage("Read APP Secrets") {
-    steps {
-        script {
-        sleep 30
-        APP_SECRETS = sh(script: """curl --silent --header "X-Vault-Token: $APP_LOGIN" -X GET $VAULT_ADDR/v1/secret/data/myapp1""", returnStdout: true)
-        APP_SECRETS_JSON = readJSON text: APP_SECRETS
-        echo "USERNAME is ${APP_SECRETS_JSON.data.data.'username'}"
-        echo "PASSWORD is ${APP_SECRETS_JSON.data.data.'password'}"
-        }
-    }
-}  
+// stage("Read APP Secrets") {
+//     steps {
+//         script {
+//         sleep 30
+//         APP_SECRETS = sh(script: """curl --silent --header "X-Vault-Token: $APP_LOGIN" -X GET $VAULT_ADDR/v1/secret/data/myapp1""", returnStdout: true)
+//         APP_SECRETS_JSON = readJSON text: APP_SECRETS
+//         echo "USERNAME is ${APP_SECRETS_JSON.data.data.'username'}"
+//         echo "PASSWORD is ${APP_SECRETS_JSON.data.data.'password'}"
+//         }
+//     }
+// }  
 }  
     
  post {
