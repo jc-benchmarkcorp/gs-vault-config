@@ -115,25 +115,19 @@ stage("test: baseline (jdk8)") {
 			}
 			options { timeout(time: 30, unit: 'MINUTES') }
 			steps {
-				script }
+				script {
 				pwd
-				
-
-mkdir -p target
-cd target
-
-pwd
-cd ../complete
-
-./mvnw clean package -Dspring.cloud.vault.app-role.secret-id=foo_bar
-ret=$?
-if [ $ret -ne 0 ]; then
-  exit $ret
-fi
-rm -rf target
-
-
-exit
+				mkdir -p target
+				cd target
+				pwd
+				cd ../complete
+				./mvnw clean package -Dspring.cloud.vault.app-role.secret-id=${APP_SECRET_ID}
+				// ret=$?
+				// if [ $ret -ne 0 ]; then
+  				// 	exit $ret
+				// fi
+				// rm -rf target
+// exit
 }
 			}
 		}
