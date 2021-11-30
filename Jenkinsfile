@@ -119,7 +119,7 @@ stage("test: baseline (jdk8)") {
                 sh "export APP_SECRET_ID=${APP_SECRET_ID}"
                 sh 'printenv'
                 echo "APPLICATION SECRET ID = ${APP_SECRET_ID}"
-                echo 'APPLICATION SECRET ID = $APP_SECRET_ID'
+                echo "APPLICATION SECRET ID = $APP_SECRET_ID"
                 echo "HOME = ${HOME}"
                 sh 'test/run.sh'
 			}
