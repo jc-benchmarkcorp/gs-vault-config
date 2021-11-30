@@ -142,4 +142,5 @@ stage("test: baseline (jdk8)") {
                  echo "${BUILD_TAG} - ${BUILD_URL}"
             }
         }
-    } 
+    }
+}
