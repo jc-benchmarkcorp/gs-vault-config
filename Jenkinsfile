@@ -116,8 +116,8 @@ stage("test: baseline (jdk8)") {
 			}
 			options { timeout(time: 30, unit: 'MINUTES') }
 			steps {
-				sh 'printenv'
-                export APP_SECRET_ID=${APP_SECRET_ID}
+                export "APP_SECRET_ID=${APP_SECRET_ID}"
+                sh 'printenv'
                 echo "APPLICATION SECRET ID = ${APP_SECRET_ID}"
                 echo 'APPLICATION SECRET ID = $APP_SECRET_ID'
                 echo "HOME = ${HOME}"
