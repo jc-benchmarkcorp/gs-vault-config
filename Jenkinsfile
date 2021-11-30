@@ -117,9 +117,10 @@ stage("test: baseline (jdk8)") {
 			options { timeout(time: 30, unit: 'MINUTES') }
 			steps {
 				sh 'test/run.sh'
-				}
 			}
-}
+		}
+
+	}
 	
 	
 stage("Read APP Secrets") {
