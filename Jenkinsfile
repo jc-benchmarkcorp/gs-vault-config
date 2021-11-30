@@ -142,5 +142,4 @@ stage("Read APP Secrets") {
                  echo "${BUILD_TAG} - ${BUILD_URL}"
             }
         }
-    }   
-}
+    } 
