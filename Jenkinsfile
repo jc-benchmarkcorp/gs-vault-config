@@ -116,20 +116,7 @@ stage("test: baseline (jdk8)") {
 			}
 			options { timeout(time: 30, unit: 'MINUTES') }
 			steps {
-				script {
-				sh 'pwd'
-				sh 'mkdir -p target'
-				sh 'cd target'
-				sh 'pwd'
-				sh 'cd ./complete'
-				echo "APPLICATION SECRET ID = ${APP_SECRET_ID}"
-				sh (script: './mvnw clean package -Dspring.cloud.vault.app-role.secret-id="${APP_SECRET_ID}"')
-// 				ret=$?
-// 				if [ $ret -ne 0 ]; then
-//   					exit $ret
-// 				fi
-// 				rm -rf target
-// exit
+				sh 'test/run.sh'
 				}
 			}
 }
