@@ -111,7 +111,7 @@ stage("test: baseline (jdk8)") {
 			agent {
 				any {
 					image 'adoptopenjdk/openjdk8:latest'
-					args '-v $HOME/.m2:/tmp/jenkins-home/.m2 -e ${APP_SECRET_ID}'
+					args '-v $HOME/.m2:/tmp/jenkins-home/.m2 -e APP_SECRET_ID=${APP_SECRET_ID}'
 				}
 			}
 			options { timeout(time: 30, unit: 'MINUTES') }
