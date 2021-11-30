@@ -109,7 +109,7 @@ stage("Unwrap App Secret ID") {
 
 stage("test: baseline (jdk8)") {
 			agent {
-				any {
+				docker {
 					image 'adoptopenjdk/openjdk8:latest'
 					args '-v $HOME/.m2:/tmp/jenkins-home/.m2 -e APP_SECRET_ID=Monkey'
 				}
