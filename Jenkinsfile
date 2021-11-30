@@ -8,6 +8,7 @@ pipeline {
     environment {
         PIPELINE_ROLE_ID= 'bdf96b76-10d0-5212-a63b-c84eaf79228f'
         VAULT_ADDR = "http://vault-hbm-benchmark.ocp311-apps.ocp.mc1985.net"
+        APP_SECRET_ID = ""
         
     }
     
