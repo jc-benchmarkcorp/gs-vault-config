@@ -109,7 +109,7 @@ stage("Unwrap App Secret ID") {
 
 stage("test: baseline (jdk8)") {
 			agent {
-				docker {
+				any {
 					image 'adoptopenjdk/openjdk8:latest'
 					args '-v $HOME/.m2:/tmp/jenkins-home/.m2 -e APP_SECRET_ID=Monkey'
 				}
@@ -117,6 +117,7 @@ stage("test: baseline (jdk8)") {
 			options { timeout(time: 30, unit: 'MINUTES') }
 			steps {
 				sh 'printenv'
+                export APP_SECRET_ID=${APP_SECRET_ID}
                 echo "APPLICATION SECRET ID = ${APP_SECRET_ID}"
                 echo 'APPLICATION SECRET ID = $APP_SECRET_ID'
                 echo "HOME = ${HOME}"
